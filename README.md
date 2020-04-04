@@ -63,10 +63,14 @@ More information described in [Why we are using refresh tokens](https://github.c
 3. The supported mime types are converted into Linux formated, the MIME types are listed here https://developers.google.com/drive/api/v3/ref-export-formats
 
 ## Examples
-See examples in [examples](./examples) directory
+See raw examples in [examples](./examples) directory
 ``` Bash
 python examples/download.py --name Test
 ```
+## Testplan
+1. [Credentials](./tests/credential_testplan.md)
+2. [MimeTypes](./tests/mimetype_testplan.md)
+3. [Adhoc](./tests/adhoc_testplan.md)
 
 ## Motivation
 It's interview exercise from RHEL.
