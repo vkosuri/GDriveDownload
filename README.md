@@ -56,11 +56,13 @@ More information described in [Why we are using refresh tokens](https://github.c
 ## Future Enhancements
 3. Upload documents
 4. Delete documents
+5. Download large files > 20MB
+6. Download public and shared files
 
 ## Known Issues
-1. To download document the export api functionality was used, Please note that the exported content is limited to 10MB. Try it now.
-2. GSuite allows duplicate file names, to avoid we are suffix enumerate idx
-3. The supported mime types are converted into Linux formated, the MIME types are listed here https://developers.google.com/drive/api/v3/ref-export-formats
+1. To download different this APP uses [google export api](https://developers.google.com/drive/api/v3/reference/files/export), Please note that the exported content is limited to 10MB only.
+2. GSuite allows duplicate file names because the file creation based on file_ids, while we are suffixing a number to avoid accidental overwrite with previous file name.
+3. GSuite supports many mimeTypes, however while downloading user chose based on local machine able launch, this is the reason user has convert given document into supported format, it's available here https://developers.google.com/drive/api/v3/ref-export-formats
 
 ## Examples
 See raw examples in [examples](./examples) directory
