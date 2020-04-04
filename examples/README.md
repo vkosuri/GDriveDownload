@@ -6,7 +6,17 @@ To execute this sample app, export all secrets as environment variables
 
 
 ``` Bash
+# clone repo
+git clone https://github.com/vkosuri/GDriveDownload.git
+cd GDriveDownload
 
+# Install require packages
+pip install -r requirements.txt
+
+# Expor PYTHONPATH
+export PYTHONPATH=$PYTHONPATH:.:src
+
+# download files
 (venv) vkosuri@vkosuri:~/github/GDriveDownload$ python examples/download.py -h
 usage: download.py [-h] --name NAME [--logfile LOGFILE]
 
