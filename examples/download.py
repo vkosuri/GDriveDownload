@@ -3,7 +3,7 @@
 '''
 Author: Mallikarjunaroa Kosuri
 Usage:
-    download.py -name Test
+    download.py --name Test
 '''
 from googleapiclient.http import MediaIoBaseDownload
 from google.auth.exceptions import GoogleAuthError
@@ -13,21 +13,32 @@ import argparse
 import google.oauth2.credentials
 import io
 import json
+import logging
 import os
 import requests
 import sys
 
-'''
-export ACCESS_TOKEN='ya29.a0Ae4lvC21ganpclkqIIs7bop8vZLp4rQUQGBO3YWKpOSsEDr1_gdEYpbXRN1Nsc12p8v7HTH1u0CE0mI1P2gqZ-JL8qYPMJFn8GeAC1nYvETeK6BppDebxuWJoHigSkt0o904-o4M_Tr5w1Cprt2hn_MFumZ7t8dSTSo'
-export CLIENT_ID='184040109443-mqqsa5f2egrfcsubnj27sfd1212f0j2i.apps.googleusercontent.com'
-export CLIENT_SECRET='Yd1KvAN0XuSERWhJ674-opGd'
-export REFRESH_TOKEN='1//04xnISQinw7YwCgYIARAAGAQSNwF-L9IrT9jJXiNcygxEB_uFQOUpZXADwHxLKhRhhgAPkPv6wnraVKnEp4zvxjkTGXcIZGIBgFg'
-export TOKEN_URI='https://www.googleapis.com/oauth2/v4/token'
-'''
+
+# Don't initialize logger here, configuration requires the log filename from
+# the argument parser, see the logging_cfg method
+logger = None
+
+def logging_cfg(filename):
+    """ Create a FileHandler based logfile for logging """
+    global logger
+
+    file_path = os.path.join(os.getcwd(), filename)
+
+    logging.basicConfig(datefmt='%H:%M:%S',
+                        format='%(asctime)s.%(msecs)-03d  %(name)-12s \
+                        %(levelname)-8s %(message)s',
+                        filename=file_path, level=logging.NOTSET)
+
+    logger = logging.getLogger(__name__)
 
 def login(access_token=None, refresh_token=None, token_uri='https://www.googleapis.com/oauth2/v4/token', client_id=None, client_secret=None):
     """
-    Login into google drive
+    Login into Google drive
     A nice video about how to access token, refresh token https://www.youtube.com/watch?v=hfWe1gPCnzc
     args:
         access_token: (str) must get it from https://developers.google.com/oauthplayground
@@ -35,7 +46,7 @@ def login(access_token=None, refresh_token=None, token_uri='https://www.googleap
         token_uri: (str) oauth token uri
         clien_id: get if from google api console
         client_scrent: get it from google api console
-    returns: 
+    returns:
         oauth credentials dictionary
     """
     try:
@@ -47,10 +58,14 @@ def login(access_token=None, refresh_token=None, token_uri='https://www.googleap
             client_secret=client_secret)
     except GoogleAuthError as err:
         print("GoogleAuthError: {0}".format(err))
+        logger.error(str(err))
     except:
-        print("Unexpected error:", sys.exc_info()[0])
+        print("Unexpected error: {0}".format(sys.exc_info()[0]))
+        logger.error("Unexpected error: {0}".format(sys.exc_info()[0]))
         raise
     else:
+        logger.debug(str(credentials.valid))
+        logger.debug(str(credentials.to_json()))
         return credentials
 
 def create_service(drive='drive',api_version='v3', credentials=None):
@@ -61,53 +76,57 @@ def create_service(drive='drive',api_version='v3', credentials=None):
         drive: (str) Name of GSuite service
         api_version: (str) v3 supported
         credentials: (dict) OAUTH2 credentials dict
+    returns:
+        returns drive_service
     """
-    access_token = os.environ.get('ACCESS_TOKEN')
-    refresh_token = os.environ.get('REFRESH_TOKEN')
-    token_uri = os.environ.get('TOKEN_URI')
-    client_id = os.environ.get('CLIENT_ID')
-    client_secret = os.environ.get('CLIENT_SECRET')
-    cred = login(access_token, refresh_token, token_uri, client_id, client_secret)
-    drive_service = discovery.build('drive', 'v3', credentials=cred)
+    drive_service = discovery.build('drive', 'v3', credentials=credentials)
+    # print(dir(drive_service))
+    logger.debug(str(drive_service))
     return drive_service
 
-def get_files(drive_service, file_name):
+def list_files(file_name, drive_service):
     """
-    Get files from drive service
+    List files with give name including duplicates
     Args:
-        drive_service: drive_service
-        file_name: name of the file download
-    See 
+        file_name: (str) name of the file(s) to get
+        drive_service: gdrive object
+    See
         list of supported query operators https://developers.google.com/drive/api/v3/ref-search-terms#operators
         File serarch operations https://developers.google.com/drive/api/v3/search-files
+    returns:
+        list of files including duplicates
     """
     results = drive_service.files().list(q = "name = '{0}'".format(file_name), fields="nextPageToken, files(id, name, mimeType, starred, trashed, owners)").execute()
+    logger.debug(str(results))
     return results.get('files',[])
 
-def download(files):
+def download(file_names):
     '''
     Download list files
     Args:
-        files: list of files
+        files: (list) list of files or file
     NOTE:
         1. Exports a Google Doc to the requested MIME type and
         returns the exported content. Please note that the exported
-        content is limited to 10MB. Try it now. 
-        2. GSuite allows duplicate file names, to avoid we are suffix enumerate idx 
+        content is limited to 10MB. Try it now.
+        2. GSuite allows duplicate file names, to avoid we are suffix enumerate idx
         3. The supported mime types are listed here https://developers.google.com/drive/api/v3/ref-export-formats
+    return:
+        void, files will be download in current directory
     '''
     guess_mime_type = {
         "application/vnd.google-apps.document":"application/vnd.oasis.opendocument.text",
         "application/vnd.google-apps.spreadsheet":"application/x-vnd.oasis.opendocument.spreadsheet"
     }
 
-    for idx, file in enumerate(results.get('files',[]), start=1):
+    for idx, file in enumerate(file_names, start=1):
         file_id = file['id']
         mimeType= file['mimeType']
         if mimeType in guess_mime_type:
             mimeType = guess_mime_type[mimeType]
         output_file = file['name'] + "_" + str(idx)
         print("file_id: {0}, mimeType: {1}, output_file: {2}".format(file_id, mimeType, output_file))
+        logger.info("file_id: {0}, mimeType: {1}, output_file: {2}".format(file_id, mimeType, output_file))
         try:
             request = driveService.files().export_media(fileId=file_id,mimeType=mimeType)
             fh = io.BytesIO()
@@ -116,11 +135,36 @@ def download(files):
             while done is False:
                 status, done = downloader.next_chunk()
                 print("Download %d%%." % int(status.progress() * 100))
+                logger.info("Download %d%%." % int(status.progress() * 100))
         except Exception as err:
-            print("Error occured: {0}".format(err))
-        # If dulicates are there replace
+            print("Error occurred: {0}".format(err))
+            logger.error("Error occurred: {0}".format(err))
+        # If duplicates are there replace
         with open(output_file,'wb') as out:
             out.write(fh.getvalue())
         fh.close()
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='Process input arguments.')
+    parser.add_argument('--name', required=True, type=str, help='please input file name to download')
+    parser.add_argument('--logfile', default="drivelog.log", required=False, type=str, help='logger file')
+    args = parser.parse_args()
+
+    # Logging
+    logging_cfg(args.logfile)
+
+    # get values from environment
+    access_token = os.environ.get('ACCESS_TOKEN')
+    refresh_token = os.environ.get('REFRESH_TOKEN')
+    token_uri = os.environ.get('TOKEN_URI')
+    client_id = os.environ.get('CLIENT_ID')
+    client_secret = os.environ.get('CLIENT_SECRET')
+
+    # login to Google drive
+    cred = login(access_token, refresh_token, token_uri, client_id, client_secret)
+    # https://developers.google.com/apps-script/reference/drive
+    drive_service = create_service('drive','v3',cred)
+    files = list_files(args.name, drive_service)
+    for file in files:
+        print("file_id:{0}, file_name:{1}, mimeType:{2}".format(file['id'], file['name'], file['mimeType']))
+    # download(files)
