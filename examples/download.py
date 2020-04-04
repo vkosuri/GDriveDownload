@@ -39,7 +39,7 @@ def logging_cfg(filename):
 def login(access_token=None, refresh_token=None, token_uri='https://www.googleapis.com/oauth2/v4/token', client_id=None, client_secret=None):
     """
     Login into Google drive
-    A nice video about how to access token, refresh token https://www.youtube.com/watch?v=hfWe1gPCnzc
+    A nice video about how to get refresh token https://www.youtube.com/watch?v=hfWe1gPCnzc
     args:
         access_token: (str) must get it from https://developers.google.com/oauthplayground
         refresh_token: (str) refresh token get it from oauth play ground
@@ -64,8 +64,9 @@ def login(access_token=None, refresh_token=None, token_uri='https://www.googleap
         logger.error("Unexpected error: {0}".format(sys.exc_info()[0]))
         raise
     else:
-        logger.debug(str(credentials.valid))
-        logger.debug(str(credentials.to_json()))
+        logger.debug("Dir credentials: {0}".format(dir(credentials)))
+        logger.debug("The login credentials are valid: {0}".format(credentials.valid))
+        logger.debug("The credentials are details are: {0}".format(str(credentials.to_json())))
         return credentials
 
 def create_service(drive='drive',api_version='v3', credentials=None):
@@ -80,7 +81,7 @@ def create_service(drive='drive',api_version='v3', credentials=None):
         returns drive_service
     """
     drive_service = discovery.build('drive', 'v3', credentials=credentials)
-    # print(dir(drive_service))
+    print(dir(drive_service))
     logger.debug(str(drive_service))
     return drive_service
 
@@ -96,14 +97,15 @@ def list_files(file_name, drive_service):
     returns:
         list of files including duplicates
     """
-    results = drive_service.files().list(q = "name = '{0}'".format(file_name), fields="nextPageToken, files(id, name, mimeType, starred, trashed, owners)").execute()
+    results = drive_service.files().list(q = "name contains '{0}'".format(file_name), fields="nextPageToken, files(id, name, mimeType, starred, trashed, owners)").execute()
     logger.debug(str(results))
     return results.get('files',[])
 
-def download(file_names):
+def download(drive_service, file_names):
     '''
-    Download list files
+    Downlods files using contains query
     Args:
+        drive_service: drive_service object
         files: (list) list of files or file
     NOTE:
         1. Exports a Google Doc to the requested MIME type and
@@ -116,20 +118,21 @@ def download(file_names):
     '''
     guess_mime_type = {
         "application/vnd.google-apps.document":"application/vnd.oasis.opendocument.text",
-        "application/vnd.google-apps.spreadsheet":"application/x-vnd.oasis.opendocument.spreadsheet"
+        "application/vnd.google-apps.spreadsheet":"application/x-vnd.oasis.opendocument.spreadsheet",
+        'application/vnd.google-apps.presentation' : 'application/vnd.oasis.opendocument.presentation',
     }
 
     for idx, file in enumerate(file_names, start=1):
         file_id = file['id']
         mimeType= file['mimeType']
+        fh = io.BytesIO()
         if mimeType in guess_mime_type:
             mimeType = guess_mime_type[mimeType]
         output_file = file['name'] + "_" + str(idx)
         print("file_id: {0}, mimeType: {1}, output_file: {2}".format(file_id, mimeType, output_file))
         logger.info("file_id: {0}, mimeType: {1}, output_file: {2}".format(file_id, mimeType, output_file))
         try:
-            request = driveService.files().export_media(fileId=file_id,mimeType=mimeType)
-            fh = io.BytesIO()
+            request = drive_service.files().export_media(fileId=file_id,mimeType=mimeType)
             downloader = MediaIoBaseDownload(fh, request)
             done = False
             while done is False:
@@ -139,7 +142,7 @@ def download(file_names):
         except Exception as err:
             print("Error occurred: {0}".format(err))
             logger.error("Error occurred: {0}".format(err))
-        # If duplicates are there replace
+        # If duplicates are there suffice with enumerate idx
         with open(output_file,'wb') as out:
             out.write(fh.getvalue())
         fh.close()
@@ -167,4 +170,5 @@ if __name__ == "__main__":
     files = list_files(args.name, drive_service)
     for file in files:
         print("file_id:{0}, file_name:{1}, mimeType:{2}".format(file['id'], file['name'], file['mimeType']))
-    # download(files)
+    # download files
+    download(drive_service, files)
