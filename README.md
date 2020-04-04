@@ -15,14 +15,20 @@ To set use [virtual environments](https://docs.python.org/3/tutorial/venv.html) 
 # Install all required packages before
 pip install -r requirements.txt
 ```
-See [Create Environment](https://github.com/vkosuri/GDriveDownload/wiki/Create-local-environment) wiki
+See detailed instructions [setting your environment](https://github.com/vkosuri/GDriveDownload/wiki/Create-local-environment) documented in wiki page.
 
 ## Set OAUTH credentials
-First generate OAUTH 2.0 credential for drive API.
+
+See more information about [Authorization](https://github.com/vkosuri/GDriveDownload/wiki/Authorization) wiki
+
+Get OAUTH 2.0 credential from Google console API.
 
 A nice video about [Generating a refresh token for YouTube API calls using the OAuth playground](https://www.youtube.com/watch?v=hfWe1gPCnzc)
 
-Get all the required from OAUTH playground, and export those variable into personal machine. if it is windows please ``set`` operator.
+Get all the required from OAUTH playground
+
+1. For Linux: use ``export`` for more information visit this link https://askubuntu.com/a/58828
+2. For Windows: use ``set`` for more information how to please visit this link https://superuser.com/a/79614
 
 ``` Bash
 export ACCESS_TOKEN='ya29.a0Ae4lvC21ganpclkqIIs7bop8vZLp4rQUQGBO3YWKpOSsEDr1_gdEYpbXRN1N'
@@ -37,8 +43,6 @@ export TOKEN_URI='https://www.googleapis.com/oauth2/v4/token'
 Never keep secrets anywhere inside your repository code tree
 
 ---
-
-See more information about [Authorization](https://github.com/vkosuri/GDriveDownload/wiki/Authorization) wiki
 
 ## Manual Inputs
 With current OAUTH2.0 user has to authenticate through browser by supplying his Google account information. In order to avoid browser steps **Exchanging the authorization code for a refresh token** method chosen.
