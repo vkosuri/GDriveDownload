@@ -4,6 +4,9 @@ from googleapiclient.http import MediaIoBaseDownload
 from mime_type import MIME_TYPES
 from utils import logging_cfg
 
+import logging
+import io
+
 logger = logging.getLogger(__name__)
 
 class FileService(object):    
@@ -18,8 +21,8 @@ class FileService(object):
         """
         self.drive_service = discovery.build('drive', 'v3', credentials=credentials)
         # print(dir(drive_service))
-        logger.debug(str(drive_service))
-        self.drive_service = drive_service
+        logger.debug(dir(self.drive_service))
+        logger.debug(str(self.drive_service))
 
     def get_drive_service(self):
         return self.drive_service
@@ -59,28 +62,31 @@ class FileService(object):
         for idx, file in enumerate(file_names, start=1):
             file_id = file['id']
             mimeType= file['mimeType']
-            fh = io.BytesIO()
             if mimeType in MIME_TYPES:
                 mimeType = MIME_TYPES[mimeType]
             else:
-                print("The requested conversion is not supported.)
+                print("The requested conversion is not supported.")
                 logger.debug("The requested conversion is not supported.")
                 continue
             output_file = file['name'] + "_" + str(idx)
             print("file_id: {0}, mimeType: {1}, output_file: {2}".format(file_id, mimeType, output_file))
             logger.info("file_id: {0}, mimeType: {1}, output_file: {2}".format(file_id, mimeType, output_file))
-            try:
-                request = self.driveService.files().export_media(fileId=file_id,mimeType=mimeType)
-                downloader = MediaIoBaseDownload(fh, request)
-                done = False
-                while done is False:
-                    status, done = downloader.next_chunk()
-                    print("Download %d%%." % int(status.progress() * 100))
-                    logger.info("Download %d%%." % int(status.progress() * 100))
-            except Exception as err:
-                print("Error occurred: {0}".format(err))
-                logger.error("Error occurred: {0}".format(err))
-            # If duplicates are there suffice with enumerate idx
-            with open(output_file,'wb') as out:
-                out.write(fh.getvalue())
-            fh.close()
+            self.__download_file(file_id, mimeType, output_file)
+
+    def __download_file(self, file_id, mimeType, output_file):
+        fh = io.BytesIO()
+        try:
+            request = self.drive_service.files().export_media(fileId=file_id,mimeType=mimeType)
+            downloader = MediaIoBaseDownload(fh, request)
+            done = False
+            while done is False:
+                status, done = downloader.next_chunk()
+                print("Download %d%%." % int(status.progress() * 100))
+                logger.info("Download %d%%." % int(status.progress() * 100))
+        except Exception as err:
+            print("Error occurred: {0}".format(err))
+            logger.error("Error occurred: {0}".format(err))
+        # If duplicates are there suffice with enumerate idx
+        with open(output_file,'wb') as out:
+            out.write(fh.getvalue())
+        fh.close()

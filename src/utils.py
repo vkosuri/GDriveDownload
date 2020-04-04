@@ -1,4 +1,5 @@
 import logging
+import os
 
 def logging_cfg(filename):
     """ Create a FileHandler based logfile for logging """

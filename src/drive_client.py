@@ -14,8 +14,6 @@ logger = logging.getLogger(__name__)
 
 class DriveClient(object):
     
-    self.credentials = None
-    
     def login(self, access_token=None, refresh_token=None, token_uri='https://www.googleapis.com/oauth2/v4/token', client_id=None, client_secret=None):
         """
         Login into Google drive
@@ -48,10 +46,13 @@ class DriveClient(object):
             logger.debug("The credentials are details are: {0}".format(str(credentials.to_json())))
             self.credentials = credentials
     
+    def get_credentials(self):
+        return self.credentials
+
     def is_token_valid(self):
         return self.credentials.valid
     
-    def refresh_token(self.credentials):
+    def refresh_token(self):
         self.credentials.refresh
 
     def get_access_token(self):
