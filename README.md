@@ -79,3 +79,9 @@ It's interview exercise from RHEL.
 
 ## LICENSE
 This application [LICESE](./LICENSE) under **UNLICENSE**
+
+## Better Code Hub
+
+The [Better Code Hub](https://bettercodehub.com) analyses how bad the code is. the compilance score is below
+
+[![BCH compliance](https://bettercodehub.com/edge/badge/vkosuri/GDriveDownload?branch=master)](https://bettercodehub.com/)
