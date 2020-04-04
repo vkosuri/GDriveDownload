@@ -1,4 +1,5 @@
 ## Check Mime Types
+This automated testplan will verify different google supported mime types.
 
 | Test Name              | Description                                                     | Expected | Actual |
 |------------------------|-----------------------------------------------------------------|----------|--------|

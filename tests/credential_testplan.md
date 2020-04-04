@@ -1,3 +1,6 @@
+
+This automated testplan will verify file access and oauth tokens
+
 ## Positive Tests
 
 | Test Name          | Description                                                  | Expected | Actual |
@@ -5,7 +8,7 @@
 | user access        | check given user has access or not                           |          |        |
 | Check file         | Check file available on the server not                       |          |        |
 | verify download    | Verify download the successfully or not into local directory |          |        |
-| User able to login | Google account exists, user should get acess                 |          |        |
+| User able to login | Google account exists, user should get access                |          |        |
 | list files         | User able to list file with given name                       |          |        |
 | download size      | Check user able to download below 10MB                       |          |        |
 | Check duplicates   | Check user can download duplicate files                      |          |        |

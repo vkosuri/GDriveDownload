@@ -1,3 +1,7 @@
+## Adhoc Testplan
+
+This manual test can run on special interest and most of them related oauth and API usage.
+
 | Test Name            | Description                                                            | Expected | Actual |
 |----------------------|------------------------------------------------------------------------|----------|--------|
 | Browser launch       | Check using oauth2 able to launch browser and accept credentials       |          |        |
@@ -6,3 +10,4 @@
 | Check API key        | User should not download files using API Key                           |          |        |
 | Check JWT Key        | User can download service accounts                                     |          |        |
 | Download large files | Download large files using wget                                        |          |        |
+| Check Error          | Investigate API errors                                                 |          |        |
