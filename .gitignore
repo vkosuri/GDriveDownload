@@ -133,3 +133,6 @@ dmypy.json
 
 # ignore pycharm
 .idea/*
+
+# ignore drivelog.log
+drivelog.log

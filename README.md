@@ -9,6 +9,12 @@ Download and search files users own Google drive.
 5. Google Drive API and OAUTH 2.0
 
 ## Create Environment
+To set use [virtual environments](https://docs.python.org/3/tutorial/venv.html) it will poulte your global python packages.
+
+``` Bash
+# Install all required packages before
+pip install -r requirements.txt
+```
 See [Create Environment](https://github.com/vkosuri/GDriveDownload/wiki/Create-local-environment) wiki
 
 ## Set OAUTH credentials
@@ -16,7 +22,7 @@ First generate OAUTH 2.0 credential for drive API.
 
 A nice video about [Generating a refresh token for YouTube API calls using the OAuth playground](https://www.youtube.com/watch?v=hfWe1gPCnzc)
 
-Get all the required from OAUTH playground, and export those variable into personal machine.
+Get all the required from OAUTH playground, and export those variable into personal machine. if it is windows please ``set`` operator.
 
 ``` Bash
 export ACCESS_TOKEN='ya29.a0Ae4lvC21ganpclkqIIs7bop8vZLp4rQUQGBO3YWKpOSsEDr1_gdEYpbXRN1N'
@@ -54,6 +60,9 @@ More information described in [Why we are using refresh tokens](https://github.c
 
 ## Examples
 See examples in [examples](./examples) directory
+``` Bash
+python examples/download.py --name Test
+```
 
 ## Motivation
 It's interview exercise from RHEL.
@@ -63,4 +72,4 @@ It's interview exercise from RHEL.
 * The scenarios that could not be automated, document them
 
 ## LICENSE
-This application [LICESE](./LICENSE) under **NO LICENSE**
+This application [LICESE](./LICENSE) under **UNLICENSE**
