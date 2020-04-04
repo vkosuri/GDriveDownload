@@ -17,18 +17,14 @@ pip install -r requirements.txt
 ```
 See detailed instructions [setting your environment](https://github.com/vkosuri/GDriveDownload/wiki/Create-local-environment) documented in wiki page.
 
-## Set OAUTH credentials
+## Get OAUTH credentials
+To Get OAUTH 2.0 credential from Google console API, you should fallow certain steps to create OAUTH2.0 API. See more information about [Authorization](https://github.com/vkosuri/GDriveDownload/wiki/Authorization) wiki
 
-See more information about [Authorization](https://github.com/vkosuri/GDriveDownload/wiki/Authorization) wiki
+Get all the required information from OAUTH playground
 
-Get OAUTH 2.0 credential from Google console API.
-
-A nice video about [Generating a refresh token for YouTube API calls using the OAuth playground](https://www.youtube.com/watch?v=hfWe1gPCnzc)
-
-Get all the required from OAUTH playground
-
-1. For Linux: use ``export`` for more information visit this link https://askubuntu.com/a/58828
-2. For Windows: use ``set`` for more information how to please visit this link https://superuser.com/a/79614
+To set evironemnt variables
+1. On Linux: use ``export`` for more information visit this link https://askubuntu.com/a/58828
+2. On Windows: use ``set`` for more information how to please visit this link https://superuser.com/a/79614
 
 ``` Bash
 export ACCESS_TOKEN='ya29.a0Ae4lvC21ganpclkqIIs7bop8vZLp4rQUQGBO3YWKpOSsEDr1_gdEYpbXRN1N'
@@ -60,8 +56,8 @@ More information described in [Why we are using refresh tokens](https://github.c
 6. Download public and shared files
 
 ## Known Issues
-1. To download different this APP uses [google export api](https://developers.google.com/drive/api/v3/reference/files/export), Please note that the exported content is limited to 10MB only.
-2. GSuite allows duplicate file names because the file creation based on file_ids, while we are suffixing a number to avoid accidental overwrite with previous file name.
+1. To download files this APP uses [google export api](https://developers.google.com/drive/api/v3/reference/files/export), Please note that the exported content is limited to 10MB only.
+2. GSuite allows duplicate file names because the file creation based on file_ids, while we are suffixing a number to avoid accidental overwrite with previous file name when download files.
 3. GSuite supports many mimeTypes, however while downloading user chose based on local machine able launch, this is the reason user has convert given document into supported format, it's available here https://developers.google.com/drive/api/v3/ref-export-formats
 
 ## Examples
