@@ -27,10 +27,10 @@ To set evironemnt variables
 2. On Windows: use ``set`` for more information how to please visit this link https://superuser.com/a/79614
 
 ``` Bash
-export ACCESS_TOKEN='ya29.a0Ae4lvC21ganpclkqIIs7bop8vZLp4rQUQGBO3YWKpOSsEDr1_gdEYpbXRN1N'
-export CLIENT_ID='1csubnj27sfd1212f0j2i.apps.googleusercontent.com'
-export CLIENT_SECRET='Yd1KvAN0XuSERWhJ'
-export REFRESH_TOKEN='1//04xnISQinw7YwCgYIARAAGAQSNwF-L9IrT9jJXiNcygxEB_uFQOUpZXADwHxLKhRhhgAP'
+export ACCESS_TOKEN='your access token'
+export CLIENT_ID='your client id'
+export CLIENT_SECRET='your client secret'
+export REFRESH_TOKEN='your refresh token'
 export TOKEN_URI='https://www.googleapis.com/oauth2/v4/token'
 ```
 ---
@@ -43,7 +43,7 @@ Never keep secrets anywhere inside your repository code tree
 ## Manual Inputs
 With current OAUTH2.0 user has to authenticate through browser by supplying his Google account information. In order to avoid browser steps **Exchanging the authorization code for a refresh token** method chosen.
 
-More information described in [Why we are using refresh tokens](https://github.com/vkosuri/GDriveDownload/wiki/Why-we-are-using-refresh-tokens) wiki
+More information described in [Getting authrization token without browser consent](https://github.com/vkosuri/GDriveDownload/wiki/Getting-authorization-token-without-browser-login) wiki
 
 ## Supported Features
 1. Download
@@ -65,10 +65,10 @@ See raw examples in [examples](./examples) directory
 ``` Bash
 python examples/download.py --name Test
 ```
-## Testplan
+## Test automation
 1. [Credentials](./tests/credential_testplan.md)
 2. [MimeTypes](./tests/mimetype_testplan.md)
-3. [Adhoc](./tests/adhoc_testplan.md)
+3. [Adhoc](./tests/adhoc_testplan.md) These are manual tests
 
 ## Motivation
 It's interview exercise from RHEL.
