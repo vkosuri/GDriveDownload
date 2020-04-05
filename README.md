@@ -28,7 +28,7 @@ Download and search files users own Google drive.
 5. Google Drive API and OAUTH 2.0
 
 ## Create Environment
-To use this app you need to set [python virtual environments](https://docs.python.org/3/tutorial/venv.html). The reason we are using python virtual environments it will poulte your global python packages.
+To use this app you need to set [python virtual environments](https://docs.python.org/3/tutorial/venv.html). The reason we are using python virtual environments it will not poulte your global python packages.
 
 ``` Bash
 # Install all required packages before executing example
@@ -81,21 +81,21 @@ Detaild information described in [Getting authrization token without browser con
 6. Download public and shared files
 
 ## Known Issues
-1. To download files this APP uses [google export api](https://developers.google.com/drive/api/v3/reference/files/export), Please note that the exported content is limited to 10MB only.
-2. GSuite allows duplicate file names because the file creation based on file_ids, while we are suffixing a number to avoid accidental overwrite with previous file name when download files.
-3. Unsupported conversion. Here are some of unsupported conversions.
+1. To can't download more than 10MB it's [export_meida](https://developers.google.com/drive/api/v3/reference/files/export) API limitation.
+2. GSuite allows ``duplicate file names`` because the file creation based on file_ids, while we are suffixing a number to avoid accidental overwrite with previous file name when download files.
+3. You can't download unsupported conversions. Here are some of unsupported conversions.
 ```
 mimeType:application/vnd.google-apps.site
 mimeType:application/vnd.google-apps.map
 mimeType:application/vnd.google-apps.drawing
 mimeType:application/vnd.google-apps.form
 ```
-Full list found here https://developers.google.com/drive/api/v3/ref-export-formats
+Full list mimeTypes are found here https://developers.google.com/drive/api/v3/ref-export-formats
 
 ## Examples
 To use this API, see some exmples in [examples](./examples) directory
 
-**NOTE:** The two steps are [Create Environment](#create-environment) and [Get OAUTH credentials](#get-oauth-credentials) mandatory to execute this example
+**NOTE:** These two steps are [Create Environment](#create-environment) and [Get OAUTH credentials](#get-oauth-credentials) mandatory to execute below example
 
 ``` Bash
 python examples/download.py --name Test

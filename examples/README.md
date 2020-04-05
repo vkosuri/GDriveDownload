@@ -13,7 +13,7 @@ cd GDriveDownload
 # Install require packages
 pip install -r requirements.txt
 
-# Expor PYTHONPATH
+# If you face any export issues, add "src" path to "PYTHONPATH"
 export PYTHONPATH=$PYTHONPATH:.:src
 
 # download files
