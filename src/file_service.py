@@ -43,7 +43,10 @@ class FileService(object):
                 q = "name = '{0}'".format(file_name), fields="nextPageToken, files(id, name, mimeType, starred, trashed, owners)"
             ).execute()
         logger.debug(str(self.query_results))
-        return self.query_results.get('files',[])
+        if self.query_results.get('files'):
+            return self.query_results.get('files')
+        else:
+            raise Exception("No files found with query contains in the drive, please check. See more information about query https://developers.google.com/drive/api/v3/reference/query-ref#fn1")
 
     def download(self, file_names):
         '''
@@ -85,7 +88,7 @@ class FileService(object):
                 logger.info("Download %d%%." % int(status.progress() * 100))
         except Exception as err:
             print("Error occurred: {0}".format(err))
-            logger.error("Error occurred: {0}".format(err))
+            logger.error("Error occurred while downloading: {0}".format(err))
         # If duplicates are there suffice with enumerate idx
         with open(output_file,'wb') as out:
             out.write(fh.getvalue())
