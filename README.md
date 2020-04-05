@@ -1,6 +1,22 @@
 ## Google drive download
 Download and search files users own Google drive.
 
+[![Build Status](https://travis-ci.com/vkosuri/GDriveDownload.svg?branch=master)](https://travis-ci.com/github/vkosuri/GDriveDownload)
+
+## Table Contents
+1. [Prerequisites](#Prerequisites)
+2. [Create Environment](#create-environment)
+3. [Get OAUTH credentials](#get-oauth-credentials)
+4. [Why manual inputs are required](#why-manual-inputs-are-required)
+5. [Supported Features](#supported-features)
+6. [Future Enhancements](#future-enhancements)
+7. [Known Issues](#known-issues)
+8. [Examples](#Examples)
+9. [Test automation](#test-automation)
+10. [Motivation](#motivation)
+11. [License](#license)
+12. [Better Code Hub](#better-code-hub)
+
 ## Prerequisites
 1. python 3.x
 2. pip
@@ -9,20 +25,20 @@ Download and search files users own Google drive.
 5. Google Drive API and OAUTH 2.0
 
 ## Create Environment
-To set use [virtual environments](https://docs.python.org/3/tutorial/venv.html) it will poulte your global python packages.
+To use this app you need to set [python virtual environments](https://docs.python.org/3/tutorial/venv.html). The reason we are using python virtual environments it will poulte your global python packages.
 
 ``` Bash
-# Install all required packages before
+# Install all required packages before executing example
 pip install -r requirements.txt
 ```
 See detailed instructions [setting your environment](https://github.com/vkosuri/GDriveDownload/wiki/Create-local-environment) documented in wiki page.
 
 ## Get OAUTH credentials
-To Get OAUTH 2.0 credential from Google console API, you should fallow certain steps to create OAUTH2.0 API. See more information about [Authorization](https://github.com/vkosuri/GDriveDownload/wiki/Authorization) wiki
+The next step is to create OAUTH 2.0 credential from Google console API, you should fallow certain steps to create OAUTH2.0 API. See more information about [Authorization](https://github.com/vkosuri/GDriveDownload/wiki/Authorization) wiki
 
-Get all the required information from OAUTH playground
+Get all mandatory paramerter ``ACCESS_TOKEN``, ``CLIENT_ID``, ``CLIENT_SECRET``, ``TOKEN_URI`` and ``REFRESH_TOKEN`` to start executing this app.
 
-To set evironemnt variables
+Set OAUTH values as system or user environemtn variables,
 1. On Linux: use ``export`` for more information visit this link https://askubuntu.com/a/58828
 2. On Windows: use ``set`` for more information how to please visit this link https://superuser.com/a/79614
 
@@ -40,10 +56,16 @@ Never keep secrets anywhere inside your repository code tree
 
 ---
 
-## Manual Inputs
-With current OAUTH2.0 user has to authenticate through browser by supplying his Google account information. In order to avoid browser steps **Exchanging the authorization code for a refresh token** method chosen.
+## Why manual inputs are required
+OAUTH credentiaon fallows two appraoches
+### Approch 1
+In this approach user has to authenticate through browser by supplying his Google account information in local browser.
+### Approach 2:
+Get secret from your account and use [OAUTH Playground](https://developers.google.com/oauthplayground/) to get **authorization token** do  **Exchanging the authorization code for a refresh token** to get access token.
 
-More information described in [Getting authrization token without browser consent](https://github.com/vkosuri/GDriveDownload/wiki/Getting-authorization-token-without-browser-login) wiki
+**This App uses Appraoch 2**
+
+Detaild information described in [Getting authrization token without browser consent](https://github.com/vkosuri/GDriveDownload/wiki/Getting-authorization-token-without-browser-login) in the wiki page.
 
 ## Supported Features
 1. Download
@@ -58,10 +80,20 @@ More information described in [Getting authrization token without browser consen
 ## Known Issues
 1. To download files this APP uses [google export api](https://developers.google.com/drive/api/v3/reference/files/export), Please note that the exported content is limited to 10MB only.
 2. GSuite allows duplicate file names because the file creation based on file_ids, while we are suffixing a number to avoid accidental overwrite with previous file name when download files.
-3. GSuite supports many mimeTypes, however while downloading user chose based on local machine able launch, this is the reason user has convert given document into supported format, it's available here https://developers.google.com/drive/api/v3/ref-export-formats
+3. Unsupported conversion. Here are some of unsupported conversions.
+```
+mimeType:application/vnd.google-apps.site
+mimeType:application/vnd.google-apps.map
+mimeType:application/vnd.google-apps.drawing
+mimeType:application/vnd.google-apps.form
+```
+Full list found here https://developers.google.com/drive/api/v3/ref-export-formats
 
 ## Examples
-See raw examples in [examples](./examples) directory
+To use this API, see some exmples in [examples](./examples) directory
+
+**NOTE:** The two steps are [Create Environment](#create-environment) and [Get OAUTH credentials](#get-oauth-credentials) mandatory to execute this example
+
 ``` Bash
 python examples/download.py --name Test
 ```
