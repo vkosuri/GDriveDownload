@@ -1,5 +1,5 @@
 
-from utils import logging_cfg
+from src.utils import logging_cfg
 
 import google.oauth2.credentials
 import io

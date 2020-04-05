@@ -1,8 +1,8 @@
 
 from googleapiclient import discovery
 from googleapiclient.http import MediaIoBaseDownload
-from mime_type import MIME_TYPES
-from utils import logging_cfg
+from src.mime_type import MIME_TYPES
+from src.utils import logging_cfg
 
 import logging
 import io
