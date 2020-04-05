@@ -74,12 +74,12 @@ class FileService(object):
             output_file = file['name'] + "_" + str(idx)
             print("file_id: {0}, mimeType: {1}, output_file: {2}".format(file_id, mimeType, output_file))
             logger.info("file_id: {0}, mimeType: {1}, output_file: {2}".format(file_id, mimeType, output_file))
-            self.__download_file(file_id, mimeType, output_file)
-
-    def __download_file(self, file_id, mimeType, output_file):
-        fh = io.BytesIO()
-        try:
             request = self.drive_service.files().export_media(fileId=file_id,mimeType=mimeType)
+            fh = io.BytesIO()
+            self.download_file(request, fh)
+
+    def download_file(self, request, fh):
+        try:
             downloader = MediaIoBaseDownload(fh, request)
             done = False
             while done is False:
