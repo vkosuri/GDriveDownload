@@ -1,5 +1,5 @@
 
-from drive_client import DriveClient
+from src.drive_client import DriveClient
 from mock import Mock
 
 import unittest2 as unittest

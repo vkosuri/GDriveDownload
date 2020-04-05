@@ -2,6 +2,9 @@
 Download and search files users own Google drive.
 
 [![Build Status](https://travis-ci.com/vkosuri/GDriveDownload.svg?branch=master)](https://travis-ci.com/github/vkosuri/GDriveDownload)
+[![Python 3.6](https://img.shields.io/badge/python-3.6-blue.svg)](https://www.python.org/downloads/release/python-360/)
+[![Requirements Status](https://requires.io/github/vkosuri/GDriveDownload/requirements.svg?branch=master)](https://requires.io/github/vkosuri/GDriveDownload/requirements/?branch=master)
+[![BCH compliance](https://bettercodehub.com/edge/badge/vkosuri/GDriveDownload?branch=master)](https://bettercodehub.com/)
 
 ## Table Contents
 1. [Prerequisites](#Prerequisites)
@@ -115,5 +118,3 @@ This application [LICESE](./LICENSE) under **UNLICENSE**
 ## Better Code Hub
 
 The [Better Code Hub](https://bettercodehub.com) analyses how bad the code is. the compilance score is below
-
-[![BCH compliance](https://bettercodehub.com/edge/badge/vkosuri/GDriveDownload?branch=master)](https://bettercodehub.com/)

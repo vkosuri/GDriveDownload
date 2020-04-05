@@ -2,7 +2,7 @@
 import json
 import mock
 import unittest2 as unittest
-from file_service import FileService
+from src.file_service import FileService
 
 class TestDownload(unittest.TestCase):
     def test_file_download(self):

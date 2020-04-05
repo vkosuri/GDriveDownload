@@ -5,10 +5,10 @@ Author: Mallikarjunaroa Kosuri
 Usage:
     download.py --name Test
 '''
-from drive_client import DriveClient
-from file_service import FileService
-from utils import logging_cfg
-from mime_type import MIME_TYPES
+from src.drive_client import DriveClient
+from src.file_service import FileService
+from src.utils import logging_cfg
+from src.mime_type import MIME_TYPES
 
 import argparse
 import os
