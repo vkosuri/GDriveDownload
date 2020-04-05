@@ -40,7 +40,7 @@ class FileService(object):
             list of files including duplicates
         """
         self.query_results = self.drive_service.files().list(
-                q = "name = '{0}'".format(file_name), fields="nextPageToken, files(id, name, mimeType, starred, trashed, owners)"
+                q = "name contains '{0}'".format(file_name), fields="nextPageToken, files(id, name, mimeType, starred, trashed, owners)"
             ).execute()
         logger.debug(str(self.query_results))
         if self.query_results.get('files'):
@@ -62,6 +62,7 @@ class FileService(object):
         return:
             void, files will be download in current directory
         '''
+        is_download = False
         for idx, file in enumerate(file_names, start=1):
             file_id = file['id']
             mimeType= file['mimeType']
@@ -71,14 +72,21 @@ class FileService(object):
                 print("The requested conversion is not supported.")
                 logger.debug("The requested conversion is not supported.")
                 continue
-            output_file = file['name'] + "_" + str(idx)
+            output_file = str(idx) + "_" + file['name']
             print("file_id: {0}, mimeType: {1}, output_file: {2}".format(file_id, mimeType, output_file))
             logger.info("file_id: {0}, mimeType: {1}, output_file: {2}".format(file_id, mimeType, output_file))
-            request = self.drive_service.files().export_media(fileId=file_id,mimeType=mimeType)
-            fh = io.BytesIO()
-            self.download_file(request, fh)
+            if mimeType == 'text/plain':
+                request = self.drive_service.files().get_media(fileId=file_id)
+            else:
+                request = self.drive_service.files().export_media(fileId=file_id,mimeType=mimeType)
 
-    def download_file(self, request, fh):
+            fh = io.BytesIO()
+            self.download_file(request, fh, output_file)
+            fh.close()
+            is_download = True
+        return is_download
+
+    def download_file(self, request, fh, output_file):
         try:
             downloader = MediaIoBaseDownload(fh, request)
             done = False
@@ -92,4 +100,3 @@ class FileService(object):
         # If duplicates are there suffice with enumerate idx
         with open(output_file,'wb') as out:
             out.write(fh.getvalue())
-        fh.close()
